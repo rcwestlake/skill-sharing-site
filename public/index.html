@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>Skill Sharing</title>
-    <link rel="stylesheet" href="skill-sharing.css">
   </head>
   <body>
     <h1>Skill Sharing</h1>
@@ -13,20 +12,20 @@
 
     <form id="newtalk">
       <h3>Submit a talk</h3>
-      Title: <input type="text" style="width: 40em" name="title">
+      Title: <input type="text" style="width: 40em" name="title" />
       <br>
-      Summary: <input type="text" style="width: 40em" name="summary">
+      Summary: <input type="text" style="width: 40em" name="summary" />
       <button type="submit">Send</button>
     </form>
 
-    <div id="template">
+    <div id="template" style="display: none">
       <div class="talk">
         <h2>{{title}}</h2>
         <div>by <span class="name">{{presenter}}</span></div>
         <p>{{summary}}</p>
         <div class="comments"></div>
         <form>
-          <input type="text" name="comment">
+          <input type="text" name="comment" />
           <button type="submit">Add comment</button>
           <button type="button" class="del">Delete talk</button>
         </form>
@@ -35,6 +34,7 @@
         <span class="name">{{author}}</span>: {{message}}
       </div>
     </div>
+
     <script src="skillsharing_client.js"></script>
   </body>
 </html>
