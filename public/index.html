@@ -3,26 +3,30 @@
   <head>
     <meta charset="utf-8">
     <title>Skill Sharing</title>
+    <link rel="stylesheet" href="skillsharing.css"></link>
   </head>
   <body>
-    <h1>Skill Sharing</h1>
-    <p>Your Name: </p>
-    <input type="text" id="name" />
-    <section id="talks"></section>
+    <section class="header">
+      <h1>Skill Sharing</h1>
+      <p class="name-text">Your Name: </p>
+      <input type="text" id="name" />
+    </section>
 
     <form id="newtalk">
       <h3>Submit a talk</h3>
-      Title: <input type="text" style="width: 40em" name="title" />
+      Title: <input type="text" name="title" class="input" />
       <br>
-      Summary: <input type="text" style="width: 40em" name="summary" />
-      <button type="submit">Send</button>
+      Summary: <input type="text" name="summary" class="input" />
+      <button type="submit" class="send-btn">Send</button>
     </form>
+    <section id="talks"><h3>Talks</h3></section>
 
     <div id="template" style="display: none">
       <div class="talk">
         <h2>{{title}}</h2>
         <div>by <span class="name">{{presenter}}</span></div>
         <p>{{summary}}</p>
+        <h4>Comments:</h4>
         <div class="comments"></div>
         <form>
           <input type="text" name="comment" />

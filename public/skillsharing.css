@@ -1,0 +1,45 @@
+.header {
+  text-align: center;
+}
+
+.name-text {
+  display: inline-block;
+}
+
+input {
+  border: none;
+  border-bottom: 3px solid #323232;
+  font-size: 20px;
+}
+
+button {
+  border: none;
+  background-color: #07689f;
+  color: white;
+  cursor: pointer;
+  height: 30px;
+  width: 100px;
+}
+
+.send-btn {
+  border: none;
+  background-color: #07689f;
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: 15px;
+  margin-top: 15px;
+  height: 55px;
+  width: 120px;
+}
+
+#newtalk {
+  display: inline-block;
+  vertical-align: top;
+  width: 30%;
+}
+
+#talks {
+  display: inline-block;
+  width: 50%;
+}
