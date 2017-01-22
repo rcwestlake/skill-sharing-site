@@ -12,6 +12,10 @@ input {
   font-size: 20px;
 }
 
+h3 {
+  font-size: 30px;
+}
+
 button {
   border: none;
   background-color: #07689f;
@@ -35,6 +39,7 @@ button {
 
 #newtalk {
   display: inline-block;
+  margin-left: 45px;
   vertical-align: top;
   width: 30%;
 }

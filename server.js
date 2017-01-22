@@ -1,31 +1,31 @@
-var http = require("http");
-var Router = require("./router");
-var ecstatic = require("ecstatic");
-var fileServer = ecstatic({root: "./public"});
+const http = require("http");
+const Router = require("./router");
+const ecstatic = require("ecstatic");
+const fileServer = ecstatic({root: "./public"});
 
-var router = new Router();
+const router = new Router();
 
-http.createServer(function(request, response) {
+http.createServer((request, response) => {
   if (!router.resolve(request, response))
     fileServer(request, response);
 }).listen(8000);
 
-function respond(response, status, data, type) {
+const respond = (response, status, data, type) => {
   response.writeHead(status, {
     "Content-Type": type || "text/plain"
   });
   response.end(data);
 }
 
-function respondJSON(response, status, data) {
+const respondJSON = (response, status, data) => {
   respond(response, status, JSON.stringify(data),
           "application/json");
 }
 
-var talks = Object.create(null);
+let talks = Object.create(null);
 
 router.add("GET", /^\/talks\/([^\/]+)$/,
-           function(request, response, title) {
+           (request, response, title) => {
   if (title in talks)
     respondJSON(response, 200, talks[title]);
   else
@@ -33,7 +33,7 @@ router.add("GET", /^\/talks\/([^\/]+)$/,
 });
 
 router.add("DELETE", /^\/talks\/([^\/]+)$/,
-           function(request, response, title) {
+           (request, response, title) => {
   if (title in talks) {
     delete talks[title];
     registerChange(title);
@@ -41,25 +41,25 @@ router.add("DELETE", /^\/talks\/([^\/]+)$/,
   respond(response, 204, null);
 });
 
-function readStreamAsJSON(stream, callback) {
-  var data = "";
-  stream.on("data", function(chunk) {
+const readStreamAsJSON = (stream, callback) => {
+  let data = "";
+  stream.on("data", (chunk) => {
     data += chunk;
   });
-  stream.on("end", function() {
-    var result, error;
+  stream.on("end", () => {
+    let result, error;
     try { result = JSON.parse(data); }
     catch (e) { error = e; }
     callback(error, result);
   });
-  stream.on("error", function(error) {
+  stream.on("error", (error) => {
     callback(error);
   });
 }
 
 router.add("PUT", /^\/talks\/([^\/]+)$/,
-           function(request, response, title) {
-  readStreamAsJSON(request, function(error, talk) {
+           (request, response, title) => {
+  readStreamAsJSON(request, (error, talk) => {
     if (error) {
       respond(response, 400, error.toString());
     } else if (!talk ||
@@ -67,7 +67,7 @@ router.add("PUT", /^\/talks\/([^\/]+)$/,
                typeof talk.summary != "string") {
       respond(response, 400, "Bad talk data");
     } else {
-      talks[title] = {title: title,
+      talks[title] = {title,
                       presenter: talk.presenter,
                       summary: talk.summary,
                       comments: []};
@@ -78,8 +78,8 @@ router.add("PUT", /^\/talks\/([^\/]+)$/,
 });
 
 router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
-           function(request, response, title) {
-  readStreamAsJSON(request, function(error, comment) {
+           (request, response, title) => {
+  readStreamAsJSON(request, (error, comment) => {
     if (error) {
       respond(response, 400, error.toString());
     } else if (!comment ||
@@ -96,26 +96,26 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
   });
 });
 
-function sendTalks(talks, response) {
+const sendTalks = (talks, response) => {
   respondJSON(response, 200, {
     serverTime: Date.now(),
-    talks: talks
+    talks
   });
 }
 
-router.add("GET", /^\/talks$/, function(request, response) {
-  var query = require("url").parse(request.url, true).query;
+router.add("GET", /^\/talks$/, (request, response) => {
+  let query = require("url").parse(request.url, true).query;
   if (query.changesSince == null) {
-    var list = [];
-    for (var title in talks)
+    let list = [];
+    for (let title in talks)
       list.push(talks[title]);
     sendTalks(list, response);
   } else {
-    var since = Number(query.changesSince);
+    let since = Number(query.changesSince);
     if (isNaN(since)) {
       respond(response, 400, "Invalid parameter");
     } else {
-      var changed = getChangedTalks(since);
+      let changed = getChangedTalks(since);
       if (changed.length > 0)
          sendTalks(changed, response);
       else
@@ -124,13 +124,13 @@ router.add("GET", /^\/talks$/, function(request, response) {
   }
 });
 
-var waiting = [];
+let waiting = [];
 
-function waitForChanges(since, response) {
-  var waiter = {since: since, response: response};
+const waitForChanges = (since, response) => {
+  let waiter = {since, response};
   waiting.push(waiter);
-  setTimeout(function() {
-    var found = waiting.indexOf(waiter);
+  setTimeout(() => {
+    let found = waiting.indexOf(waiter);
     if (found > -1) {
       waiting.splice(found, 1);
       sendTalks([], response);
@@ -138,23 +138,23 @@ function waitForChanges(since, response) {
   }, 90 * 1000);
 }
 
-var changes = [];
+let changes = [];
 
-function registerChange(title) {
-  changes.push({title: title, time: Date.now()});
-  waiting.forEach(function(waiter) {
+const registerChange = (title) => {
+  changes.push({title, time: Date.now()});
+  waiting.forEach(waiter => {
     sendTalks(getChangedTalks(waiter.since), waiter.response);
   });
   waiting = [];
 }
 
-function getChangedTalks(since) {
-  var found = [];
-  function alreadySeen(title) {
-    return found.some(function(f) {return f.title == title;});
+const getChangedTalks = (since) => {
+  let found = [];
+  const alreadySeen = (title) => {
+    return found.some((f) => f.title == title);
   }
-  for (var i = changes.length - 1; i >= 0; i--) {
-    var change = changes[i];
+  for (let i = changes.length - 1; i >= 0; i--) {
+    let change = changes[i];
     if (change.time <= since)
       break;
     else if (alreadySeen(change.title))
