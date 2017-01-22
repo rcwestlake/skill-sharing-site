@@ -141,9 +141,31 @@ function waitForChanges(since, response) {
 var changed = [];
 
 function registerChange(title) {
-  changes.push({title: title, time, Date.now()});
+  changes.push({title: title, time: Date.now()});
   waiting.forEach(function(waiter) {
     sendTalks(getChangedTalks(waiter.since), waiter.response);
   });
   waiting = [];
+}
+
+function getChangedTalks(since) {
+  var found = [];
+  function alreadySeen(title) {
+    return found.some(function(f) {
+      return f.title == title
+    });
+  }
+
+  for(var i = changes.length - 1; i >= 0; i--) {
+    var change = changes[i];
+    if(change.title <= since)
+      break;
+    else if(alreadySeen(change.title))
+      continue;
+    else if(change.title in talks)
+      found.push(talks[change.title]);
+    else
+      found.push({title: change.title, deleted: true});
+  }
+  return found;
 }
