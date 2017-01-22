@@ -102,11 +102,6 @@ function talkURL(title) {
 }
 
 function deleteTalk(title) {
-  request({pathname: talkURL(title), method: "DELETE"},
-          reportError);
-}
-
-function deleteTalk(title) {
   request({pathname: talkURL(title), method: "DELETE"}, reportError);
 }
 
