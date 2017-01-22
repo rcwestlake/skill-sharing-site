@@ -151,18 +151,15 @@ function registerChange(title) {
 function getChangedTalks(since) {
   var found = [];
   function alreadySeen(title) {
-    return found.some(function(f) {
-      return f.title == title
-    });
+    return found.some(function(f) {return f.title == title;});
   }
-
-  for(var i = changes.length - 1; i >= 0; i--) {
+  for (var i = changes.length - 1; i >= 0; i--) {
     var change = changes[i];
-    if(change.title <= since)
+    if (change.time <= since)
       break;
-    else if(alreadySeen(change.title))
+    else if (alreadySeen(change.title))
       continue;
-    else if(change.title in talks)
+    else if (change.title in talks)
       found.push(talks[change.title]);
     else
       found.push({title: change.title, deleted: true});
