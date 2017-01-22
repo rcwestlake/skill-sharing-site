@@ -97,7 +97,7 @@ router.add("POST", /^\/talks\/([^\/]+)\/comments$/,
 });
 
 function sendTalks(talks, response) {
-  responseJSON(response, 200, {
+  respondJSON(response, 200, {
     serverTime: Date.now(),
     talks: talks
   });
@@ -138,7 +138,7 @@ function waitForChanges(since, response) {
   }, 90 * 1000);
 }
 
-var changed = [];
+var changes = [];
 
 function registerChange(title) {
   changes.push({title: title, time: Date.now()});
